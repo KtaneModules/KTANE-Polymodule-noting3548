@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 23871218837275734}
   - component: {fileID: 114806719880744208}
   - component: {fileID: 114036672011889160}
+  - component: {fileID: 114545084099021900}
   m_Layer: 0
   m_Name: Button (1)
   m_TagString: Untagged
@@ -111,6 +112,7 @@ GameObject:
   - component: {fileID: 23431951530160126}
   - component: {fileID: 114457150210960672}
   - component: {fileID: 114244029664342502}
+  - component: {fileID: 114475158035572856}
   m_Layer: 0
   m_Name: Button (4)
   m_TagString: Untagged
@@ -128,6 +130,7 @@ GameObject:
   - component: {fileID: 4987845134719748}
   - component: {fileID: 23916118515371366}
   - component: {fileID: 102974177004507394}
+  - component: {fileID: 114552183085387686}
   m_Layer: 0
   m_Name: New Text
   m_TagString: Untagged
@@ -145,6 +148,7 @@ GameObject:
   - component: {fileID: 4479729741788734}
   - component: {fileID: 23681022403076478}
   - component: {fileID: 102899860141316458}
+  - component: {fileID: 114763693787882204}
   m_Layer: 0
   m_Name: New Text
   m_TagString: Untagged
@@ -183,6 +187,7 @@ GameObject:
   - component: {fileID: 23816711247287250}
   - component: {fileID: 114109313933114526}
   - component: {fileID: 114255976260254014}
+  - component: {fileID: 114016949518652764}
   m_Layer: 0
   m_Name: Button (2)
   m_TagString: Untagged
@@ -239,6 +244,7 @@ GameObject:
   - component: {fileID: 23941356917374552}
   - component: {fileID: 114098028551391128}
   - component: {fileID: 114907036908005064}
+  - component: {fileID: 114190085195804880}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -279,7 +285,7 @@ GameObject:
   - component: {fileID: 114846405590615918}
   - component: {fileID: 114990544492691844}
   m_Layer: 0
-  m_Name: Template
+  m_Name: Polymodule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -316,6 +322,7 @@ GameObject:
   - component: {fileID: 23439164072565190}
   - component: {fileID: 114094540592405060}
   - component: {fileID: 114408336385218640}
+  - component: {fileID: 114057303724532162}
   m_Layer: 0
   m_Name: Button (3)
   m_TagString: Untagged
@@ -333,6 +340,7 @@ GameObject:
   - component: {fileID: 4400425113031640}
   - component: {fileID: 23778836675926298}
   - component: {fileID: 102772927131436824}
+  - component: {fileID: 114584469455947944}
   m_Layer: 0
   m_Name: New Text
   m_TagString: Untagged
@@ -368,6 +376,7 @@ GameObject:
   - component: {fileID: 4403584599841214}
   - component: {fileID: 23552969959851318}
   - component: {fileID: 102651967472901232}
+  - component: {fileID: 114872825220444854}
   m_Layer: 0
   m_Name: New Text
   m_TagString: Untagged
@@ -734,7 +743,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ca313e4683729d545b61ff7d643d8fea, type: 3}
+  - {fileID: 2100000, guid: 21e4d0f157b6bcb4bb5636d45e7f817b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -870,7 +879,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ca313e4683729d545b61ff7d643d8fea, type: 3}
+  - {fileID: 2100000, guid: 21e4d0f157b6bcb4bb5636d45e7f817b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -904,7 +913,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ca313e4683729d545b61ff7d643d8fea, type: 3}
+  - {fileID: 2100000, guid: 21e4d0f157b6bcb4bb5636d45e7f817b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -938,7 +947,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ca313e4683729d545b61ff7d643d8fea, type: 3}
+  - {fileID: 2100000, guid: 21e4d0f157b6bcb4bb5636d45e7f817b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1040,7 +1049,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: ca313e4683729d545b61ff7d643d8fea, type: 3}
+  - {fileID: 2100000, guid: 21e4d0f157b6bcb4bb5636d45e7f817b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1324,7 +1333,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1464821692632900}
-  m_Text: 0
+  m_Text: 1
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1345,7 +1354,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1983219367273336}
-  m_Text: 0
+  m_Text: 4
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1366,7 +1375,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1952297234665000}
-  m_Text: 0
+  m_Text: 2
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1408,7 +1417,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1352331730073646}
-  m_Text: 0
+  m_Text: 3
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1422,6 +1431,19 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &114016949518652764
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1425627144673368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Color
 --- !u!114 &114036672011889160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1460,6 +1482,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightScale: {x: 1, y: 1, z: 1}
   OutlineAmount: 0
+--- !u!114 &114057303724532162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1915864888322696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Color
 --- !u!114 &114094540592405060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1553,6 +1588,19 @@ MonoBehaviour:
   AllowSelectionWrapY: 0
   ForceSelectionHighlight: 0
   ForceInteractionHighlight: 0
+--- !u!114 &114190085195804880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1530149170301658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Color
 --- !u!114 &114244029664342502
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1661,6 +1709,19 @@ MonoBehaviour:
   AllowSelectionWrapY: 0
   ForceSelectionHighlight: 0
   ForceInteractionHighlight: 0
+--- !u!114 &114475158035572856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1339369776906034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Color
 --- !u!114 &114505201404923540
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1674,6 +1735,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightScale: {x: 1, y: 1, z: 1}
   OutlineAmount: 0
+--- !u!114 &114545084099021900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1055499811315270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Unlit/Color
+--- !u!114 &114552183085387686
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1352331730073646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114570430299588062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1687,6 +1774,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightScale: {x: 1, y: 1, z: 1}
   OutlineAmount: 0
+--- !u!114 &114584469455947944
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1952297234665000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114586792371734802
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1700,6 +1800,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightScale: {x: 1, y: 1, z: 1}
   OutlineAmount: 0
+--- !u!114 &114763693787882204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393220428389636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114806719880744208
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1768,6 +1881,19 @@ MonoBehaviour:
   ModuleType: polymodule
   ModuleDisplayName: Polymodule
   RequiresTimerVisibility: 1
+--- !u!114 &114872825220444854
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1983219367273336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114907036908005064
 MonoBehaviour:
   m_ObjectHideFlags: 1

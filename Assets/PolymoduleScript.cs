@@ -21,12 +21,12 @@ public class PolymoduleScript : MonoBehaviour {
     int[] FinalValues = new int[5];
     int[] SecondToLastValues = new int[5];
 
-
+    int InputNumber = 0;
 
     string SERIALNUMBER;
     readonly string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    readonly int DAY = (int)System.DateTime.Now.DayOfWeek + 1;
-    readonly int DATE = System.DateTime.Now.Day;
+    readonly int DAY = (int)System.DateTime.Now.DayOfWeek + 1-1;
+    readonly int DATE = System.DateTime.Now.Day-1;
     readonly int MONTH = System.DateTime.Now.Month;
     readonly int YEAR = System.DateTime.Now.Year;
 
@@ -48,7 +48,7 @@ public class PolymoduleScript : MonoBehaviour {
         INPUTMETHOD = (YEAR + DATE + DAY + MONTH) % 3;
         ModuleId = ModuleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += Activate;
-
+        //Rule generation
         var Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
         ulong a = 1664525, c = 1013904223, m = (ulong)Math.Pow(2, 32);
 
@@ -57,7 +57,9 @@ public class PolymoduleScript : MonoBehaviour {
             Seed = LCG(a, c, m, Seed);
             RULES[i] = (int)(Seed % 16);
         }
-
+        //Make sure the first rules aren't redundant
+        if (RULES[0] == 5||RULES[0]==6) { RULES[0] = 8;}
+        //Make sure rule 5 doesn't appear twice in a row
         bool WasLastValue5 = false;
 
         for (int i = 0; i < RULES.Length; i++) {
@@ -76,19 +78,25 @@ public class PolymoduleScript : MonoBehaviour {
         
     }
     void ButtonPress(KMSelectable Button){
-        UpdateFinalValues();
+        GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
+        Button.AddInteractionPunch(1);
+        if (InputNumber==0){UpdateFinalValues();}
         InputArray = (int[])FinalValues.Clone();
         Array.Sort(InputArray);
-
-        Debug.Log(Mathf.FloorToInt(Bomb.GetTime() / 60f));
-
-
 
         switch (INPUTMETHOD) {
             case 0:
                 if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4]) { Solve(); }
                 else {Strike();}
                         
+                break;
+            case 1:
+                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[InputNumber])
+                {
+                    InputNumber++;
+                    if (InputNumber == 5) { Solve(); }
+                }
+                else { InputNumber = 0;Strike();}
                 break;
             case 2:
                 if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4] && FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] % 10 == Bomb.GetTime() % 10) { Solve(); }
@@ -144,7 +152,6 @@ public class PolymoduleScript : MonoBehaviour {
                     FinalValues[i] += InitialValues[i];
                 }
                 break;
-            //TODO make sure this doesn't accour twice in a row
             case 5:
                 int MaxIndex = Array.IndexOf(FinalValues, FinalValues.Max());
                 FinalValues[MaxIndex] = SecondToLastValues[MaxIndex];
@@ -155,8 +162,7 @@ public class PolymoduleScript : MonoBehaviour {
                 break;
             case 7:
                 for (int i = 0; i < FinalValues.Length; i++) {
-                    FinalValues[i] = Mathf.FloorToInt((float)Math.Sqrt(FinalValues[i]));
-                    
+                    FinalValues[i] = Mathf.FloorToInt((float)Math.Sqrt(FinalValues[i]));                   
                 }
                 break;
             case 8:
@@ -223,8 +229,6 @@ public class PolymoduleScript : MonoBehaviour {
             if (FinalValues[i]==Duplicate)
             { DuplicateIndices.Add(i);
             };
-
-
         }
         int HighestValue = -1;
         int HighestIndex = -1;
@@ -322,6 +326,11 @@ public class PolymoduleScript : MonoBehaviour {
                 if (CheckForDuplicates() == true) { break; }
             }
 
+            string TempString = "";
+            foreach (int n in FinalValues) {
+                TempString += n+" ";
+            }
+            Debug.LogFormat("Changed the array into {0}",TempString);
         }
 
 
