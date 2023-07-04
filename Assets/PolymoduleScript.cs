@@ -30,15 +30,42 @@ public class PolymoduleScript : MonoBehaviour {
     readonly int MONTH = System.DateTime.Now.Month;
     readonly int YEAR = System.DateTime.Now.Year;
 
-    List<int> RULES = new List<int>();
-    readonly int MODULUS = 11;
+    int[] RULES = new int[18];
+    readonly int MODULUS = 14;
     int RULENUMBER;
+    int INPUTMETHOD;
+    int[] InputArray;
+
+    static ulong LCG(ulong a, ulong c, ulong m, ulong x)
+    {
+        return (a * x + c) % m;
+    }
+
 
     void Awake () {
-        RULENUMBER = 10 + (DAY % 3) - (DATE % 3);
+        RULENUMBER = 15 + (DAY % 3) - (DATE % 3);
+        SERIALNUMBER = Bomb.GetSerialNumber();
+        INPUTMETHOD = (YEAR + DATE + DAY + MONTH) % 3;
         ModuleId = ModuleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += Activate;
-        SERIALNUMBER = Bomb.GetSerialNumber();
+
+        var Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
+        ulong a = 1664525, c = 1013904223, m = (ulong)Math.Pow(2, 32);
+
+        for(int i = 0; i < RULES.Length; i++)
+        {
+            Seed = LCG(a, c, m, Seed);
+            RULES[i] = (int)(Seed % 16);
+        }
+
+        bool WasLastValue5 = false;
+
+        for (int i = 0; i < RULES.Length; i++) {
+            if (WasLastValue5 && RULES[i] == 5) { RULES[i] = 6;WasLastValue5 = false;continue; }
+
+            if (RULES[i] == 5) { WasLastValue5 = true; }
+            else { WasLastValue5 = false; }
+        }
 
         foreach (KMSelectable Button in Buttons)
         {
@@ -46,21 +73,28 @@ public class PolymoduleScript : MonoBehaviour {
             Button.OnInteract += delegate () { ButtonPress(Button); return false; };
         }
 
-        RULES.Add((DAY * (YEAR - DATE)) % MODULUS);
-        RULES.Add((MONTH * (YEAR - DAY)) % MODULUS);
-        RULES.Add((DAY * 3 * YEAR) % MODULUS);
-        RULES.Add((YEAR + MONTH + 8 - DAY) % MODULUS);
-        RULES.Add(DAY);
-        RULES.Add((MONTH + DATE) % MODULUS);
-        RULES.Add((YEAR * MONTH * DAY) % MODULUS);
-        RULES.Add((MONTH + DAY + YEAR) % MODULUS);
-        RULES.Add((DAY * 9 * DATE) % MODULUS);
-        RULES.Add(((MONTH + YEAR) * DATE) % MODULUS);
-        RULES.Add((DAY * DAY * (DAY + MONTH)) % MODULUS);
-        RULES.Add((MONTH + (MONTH * DAY) + (MONTH * YEAR)) % MODULUS);
+        
     }
     void ButtonPress(KMSelectable Button){
-        Debug.Log("Test");
+        UpdateFinalValues();
+        InputArray = (int[])FinalValues.Clone();
+        Array.Sort(InputArray);
+
+        Debug.Log(Mathf.FloorToInt(Bomb.GetTime() / 60f));
+
+
+
+        switch (INPUTMETHOD) {
+            case 0:
+                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4]) { Solve(); }
+                else {Strike();}
+                        
+                break;
+            case 2:
+                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4] && FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] % 10 == Bomb.GetTime() % 10) { Solve(); }
+                else { Strike(); }
+                break;
+        }
     }
 
     void Activate() {
@@ -143,6 +177,35 @@ public class PolymoduleScript : MonoBehaviour {
                     FinalValues[i] += Bomb.GetSolvedModuleNames().Count;
                 } 
                 break;
+            case 11:
+                for (int i = 0; i < FinalValues.Length; i++) {
+                    if (FinalValues[i] <= Bomb.GetSolvedModuleNames().Count) { FinalValues[i] += 20; }
+                }
+                break;
+            case 12:
+                for (int i = 0; i < FinalValues.Length; i++) {
+                    if (FinalValues[i] < 10) { FinalValues[i] += 20; }
+                }
+                break;
+            case 13:
+                for (int i = 0; i < FinalValues.Length; i++) {
+                    if (FinalValues.Min() != 0 && FinalValues[i] != FinalValues.Min()&&FinalValues[i]%FinalValues.Min()==0) { FinalValues[i] *= 2; }
+                }
+                break;
+            case 14:
+                FinalValues[Array.IndexOf(FinalValues, FinalValues.Max())] += Mathf.FloorToInt(Bomb.GetTime() / 60f);
+                FinalValues[Array.IndexOf(FinalValues, FinalValues.Min())] += Mathf.FloorToInt(Bomb.GetTime() / 60f);
+                break;
+            case 15:
+                int TempSum = 0;
+
+                foreach (int i in FinalValues) {
+                    TempSum += i;
+                }
+
+                if (Mathf.FloorToInt(Bomb.GetTime() / 60f) < TempSum) { FinalValues[Array.IndexOf(FinalValues, FinalValues.Min())] += 10; }
+                else { FinalValues[Array.IndexOf(FinalValues, FinalValues.Min())] += 30; }
+                break;
         }
 
 
@@ -152,12 +215,61 @@ public class PolymoduleScript : MonoBehaviour {
 
     }
 
+    void ResolveDuplicate(int Duplicate) {
+        List<int> DuplicateIndices = new List<int>();
+
+        for (int i = 0; i < FinalValues.Length; i++)
+        {
+            if (FinalValues[i]==Duplicate)
+            { DuplicateIndices.Add(i);
+            };
+
+
+        }
+        int HighestValue = -1;
+        int HighestIndex = -1;
+        foreach (int i in DuplicateIndices) {
+            if (InitialValues[i] > HighestValue) { HighestValue = InitialValues[i]; HighestIndex = i; }
+        }
+        FinalValues[HighestIndex] += 1;
+    }
+
+    bool CheckForDuplicates() {
+        int[] CheckingArray = new int[5];
+
+        for (int i = 0; i < CheckingArray.Length; i++)
+        {
+            CheckingArray[i] = -1;
+        }
+
+
+        int Duplicate = -1;
+        for (int i = 0; i < FinalValues.Length; i++)
+        {
+            if (CheckingArray.Contains(FinalValues[i]))
+            {
+                Debug.Log("Duplicate found at index " + i);
+                ResolveDuplicate(FinalValues[i]);
+                return false;
+            };
+            CheckingArray[i] = FinalValues[i];
+        }
+
+        return true;
+    }
+
+
 
     void Start () {
+
+        Debug.Log(Mathf.FloorToInt(Bomb.GetTime()/60f));
+
         string TempString = "";
-        for (int i = 0; i < RULES.Count; i++) {
+        for (int i = 0; i < RULES.Length; i++) {
             TempString += RULES[i]+" ";
         }
+
+
         Debug.Log("Rules are" + TempString);
 
         Debug.Log("Day is " + DAY);
@@ -185,12 +297,8 @@ public class PolymoduleScript : MonoBehaviour {
         }
 
 
-        for (int i = 0; i < RULENUMBER; i++) {
-            if(RULES[i]!=5) { SecondToLastValues = (int[])FinalValues.Clone(); }
-            ValueChanger(RULES[i]);
-        }
 
-        
+        UpdateFinalValues();
 
         for (int i = 0; i < InitialValues.Length; i++)
         {
@@ -210,6 +318,9 @@ public class PolymoduleScript : MonoBehaviour {
         {
             if (RULES[i] != 5) { SecondToLastValues = (int[])FinalValues.Clone(); }
             ValueChanger(RULES[i]);
+            while (true) {
+                if (CheckForDuplicates() == true) { break; }
+            }
 
         }
 

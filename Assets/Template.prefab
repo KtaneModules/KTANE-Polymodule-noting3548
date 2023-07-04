@@ -218,6 +218,7 @@ GameObject:
   - component: {fileID: 4755602119590408}
   - component: {fileID: 23186450738228780}
   - component: {fileID: 102179726245477884}
+  - component: {fileID: 114039003337448520}
   m_Layer: 0
   m_Name: New Text
   m_TagString: Untagged
@@ -1433,6 +1434,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonIndex: 1
+--- !u!114 &114039003337448520
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1464821692632900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114054346668008274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1736,6 +1750,10 @@ MonoBehaviour:
   Audio: {fileID: 114915473299363512}
   Buttons:
   - {fileID: 114098028551391128}
+  - {fileID: 114806719880744208}
+  - {fileID: 114109313933114526}
+  - {fileID: 114094540592405060}
+  - {fileID: 114457150210960672}
 --- !u!114 &114853960920223876
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1747,8 +1765,8 @@ MonoBehaviour:
   m_Script: {fileID: -119419473, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ModuleType: template
-  ModuleDisplayName: Template
+  ModuleType: polymodule
+  ModuleDisplayName: Polymodule
   RequiresTimerVisibility: 1
 --- !u!114 &114907036908005064
 MonoBehaviour:
