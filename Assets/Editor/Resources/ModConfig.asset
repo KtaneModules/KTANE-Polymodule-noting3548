@@ -14,7 +14,14 @@ MonoBehaviour:
   id: polymodule
   title: Polymodule
   author: noting3548
-  description: 
-  version: 
+  description: 'A module that changes it''s rules every day.
+
+
+    The html file should be found in the ktane repository. (ktane.timwi.de)
+
+
+    If there are any bugs, contact noting3548 on discord. (Note that this is not the
+    main steam account.)'
+  version: 1
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: f2f79aed0829dde4eb9f8ec579275b61, type: 3}

@@ -17,21 +17,20 @@ public class PolymoduleScript : MonoBehaviour {
 
     public KMSelectable[] Buttons;
 
-    int[] InitialValues = new int[5];
-    int[] FinalValues = new int[5];
-    int[] SecondToLastValues = new int[5];
+    int[] InitialValues = new int[6];
+    int[] FinalValues = new int[6];
+    int[] SecondToLastValues = new int[6];
 
     int InputNumber = 0;
 
     string SERIALNUMBER;
     readonly string ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    readonly int DAY = (int)System.DateTime.Now.DayOfWeek + 1-1;
-    readonly int DATE = System.DateTime.Now.Day-1;
+    readonly int DAY = (int)System.DateTime.Now.DayOfWeek + 1;
+    readonly int DATE = System.DateTime.Now.Day;
     readonly int MONTH = System.DateTime.Now.Month;
     readonly int YEAR = System.DateTime.Now.Year;
 
     int[] RULES = new int[18];
-    readonly int MODULUS = 14;
     int RULENUMBER;
     int INPUTMETHOD;
     int[] InputArray;
@@ -41,10 +40,11 @@ public class PolymoduleScript : MonoBehaviour {
         return (a * x + c) % m;
     }
 
+  
 
     void Awake () {
         RULENUMBER = 15 + (DAY % 3) - (DATE % 3);
-        SERIALNUMBER = Bomb.GetSerialNumber();
+       
         INPUTMETHOD = (YEAR + DATE + DAY + MONTH) % 3;
         ModuleId = ModuleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += Activate;
@@ -71,12 +71,10 @@ public class PolymoduleScript : MonoBehaviour {
 
         foreach (KMSelectable Button in Buttons)
         {
-
             Button.OnInteract += delegate () { ButtonPress(Button); return false; };
-        }
-
-        
+        }     
     }
+
     void ButtonPress(KMSelectable Button){
         GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
         Button.AddInteractionPunch(1);
@@ -86,7 +84,7 @@ public class PolymoduleScript : MonoBehaviour {
 
         switch (INPUTMETHOD) {
             case 0:
-                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4]) { Solve(); }
+                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[5]) { Solve(); }
                 else {Strike();}
                         
                 break;
@@ -94,12 +92,12 @@ public class PolymoduleScript : MonoBehaviour {
                 if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[InputNumber])
                 {
                     InputNumber++;
-                    if (InputNumber == 5) { Solve(); }
+                    if (InputNumber == 6) { Solve(); }
                 }
                 else { InputNumber = 0;Strike();}
                 break;
             case 2:
-                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[4] && FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] % 10 == Bomb.GetTime() % 10) { Solve(); }
+                if (FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] == InputArray[5] && FinalValues[Button.GetComponent<NumberScript>().ButtonIndex] % 10 == Math.Floor(Bomb.GetTime() % 10)) { Solve(); }
                 else { Strike(); }
                 break;
         }
@@ -113,7 +111,6 @@ public class PolymoduleScript : MonoBehaviour {
         {
             case 0:
                 for (int i = 0; i < FinalValues.Length; i++) {
-
                     if (char.IsDigit(SERIALNUMBER[FinalValues[i] % 6])) { FinalValues[i] += int.Parse(SERIALNUMBER[FinalValues[i] % 6].ToString()); }
                     else { FinalValues[i] += 1+ALPHABET.IndexOf(SERIALNUMBER[FinalValues[i] % 6]); }
                 }
@@ -136,7 +133,7 @@ public class PolymoduleScript : MonoBehaviour {
                     if (h == InitialValues.Max()) { continue; }
                     AvarageSum += h;
                 }
-                FinalValues[Array.IndexOf(FinalValues, FinalValues.Max())] = Mathf.FloorToInt(AvarageSum/4f);
+                FinalValues[Array.IndexOf(FinalValues, FinalValues.Max())] = Mathf.FloorToInt(AvarageSum/5f);
                 break;
             case 3:
                 int SmallestNumber = FinalValues.Min();
@@ -204,21 +201,13 @@ public class PolymoduleScript : MonoBehaviour {
                 break;
             case 15:
                 int TempSum = 0;
-
                 foreach (int i in FinalValues) {
                     TempSum += i;
                 }
-
                 if (Mathf.FloorToInt(Bomb.GetTime() / 60f) < TempSum) { FinalValues[Array.IndexOf(FinalValues, FinalValues.Min())] += 10; }
                 else { FinalValues[Array.IndexOf(FinalValues, FinalValues.Min())] += 30; }
                 break;
         }
-
-
-
-
-
-
     }
 
     void ResolveDuplicate(int Duplicate) {
@@ -239,13 +228,13 @@ public class PolymoduleScript : MonoBehaviour {
     }
 
     bool CheckForDuplicates() {
-        int[] CheckingArray = new int[5];
+        int[] CheckingArray = new int[6];
 
         for (int i = 0; i < CheckingArray.Length; i++)
         {
             CheckingArray[i] = -1;
         }
-
+        
 
         int Duplicate = -1;
         for (int i = 0; i < FinalValues.Length; i++)
@@ -265,8 +254,7 @@ public class PolymoduleScript : MonoBehaviour {
 
 
     void Start () {
-
-        Debug.Log(Mathf.FloorToInt(Bomb.GetTime()/60f));
+        SERIALNUMBER = Bomb.GetSerialNumber();
 
         string TempString = "";
         for (int i = 0; i < RULES.Length; i++) {
@@ -274,12 +262,12 @@ public class PolymoduleScript : MonoBehaviour {
         }
 
 
-        Debug.Log("Rules are" + TempString);
+        //Debug.Log("Rules are" + TempString);
+        //Debug.Log("Day is " + DAY);
+        //Debug.Log("Date is " + DATE);
+        //Debug.Log("Month is " + MONTH);
+        //Debug.Log("Year is " + YEAR);
 
-        Debug.Log("Day is " + DAY);
-        Debug.Log("Date is " + DATE);
-        Debug.Log("Month is " + MONTH);
-        Debug.Log("Year is " + YEAR);
         for (int i = 0; i < InitialValues.Length; i++)
         {
             InitialValues[i] = -1;
@@ -299,22 +287,15 @@ public class PolymoduleScript : MonoBehaviour {
 
             Debug.Log("Initial value " + i + " is " + InitialValues[i]);
         }
-
-
-
         UpdateFinalValues();
 
-        for (int i = 0; i < InitialValues.Length; i++)
+        /*for (int i = 0; i < InitialValues.Length; i++)
         {
-
             Debug.Log("Final value " + i + " is " + FinalValues[i]);
-        }
-
-
-
+        }*/
     }
 
-    int[] UpdateFinalValues() {
+    void UpdateFinalValues() {
 
         FinalValues = (int[])InitialValues.Clone();
 
@@ -332,31 +313,27 @@ public class PolymoduleScript : MonoBehaviour {
             }
             Debug.LogFormat("Changed the array into {0}",TempString);
         }
-
-
-        return FinalValues;
-    }
-
-    void CheckForSameInstances() {
-
-
-
-    }
-
-    void Update()
-    {
-
     }
 
     void Solve()
     {
+        Debug.LogFormat("[Polymodule] Module solved");
         GetComponent<KMBombModule>().HandlePass();
     }
 
     void Strike()
     {
+
+        string TempString = "";
+        foreach (int n in FinalValues) {
+            TempString += n + " ";
+        }
+        Debug.Log("The last digit of the timer is "+ Math.Floor(Bomb.GetTime()%10));
+        Debug.Log("The current minute is " + Mathf.FloorToInt(Bomb.GetTime() / 60f));
+        Debug.LogFormat("[Polymodule] Striked, expected values were {0}",TempString);
         GetComponent<KMBombModule>().HandleStrike();
     }
+
     static List<int> PrimeFactors(int number)
     {
         var factors = new List<int>();
