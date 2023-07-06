@@ -78,9 +78,14 @@ public class PolymoduleScript : MonoBehaviour {
     void ButtonPress(KMSelectable Button){
         GetComponent<KMAudio>().PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, transform);
         Button.AddInteractionPunch(1);
-        if (InputNumber==0){UpdateFinalValues();}
+        
+        if (InputNumber==0){
+            Debug.LogFormat("[Polymodule] Pressed button at minute {0}", Mathf.FloorToInt(Bomb.GetTime() / 60f));
+            UpdateFinalValues();}
         InputArray = (int[])FinalValues.Clone();
         Array.Sort(InputArray);
+
+       
 
         switch (INPUTMETHOD) {
             case 0:
@@ -130,7 +135,7 @@ public class PolymoduleScript : MonoBehaviour {
             case 2:
                 int AvarageSum = 0;
                 foreach (int h in FinalValues) {
-                    if (h == InitialValues.Max()) { continue; }
+                    if (h == FinalValues.Max()) { continue; }
                     AvarageSum += h;
                 }
                 FinalValues[Array.IndexOf(FinalValues, FinalValues.Max())] = Mathf.FloorToInt(AvarageSum/5f);
@@ -241,7 +246,7 @@ public class PolymoduleScript : MonoBehaviour {
         {
             if (CheckingArray.Contains(FinalValues[i]))
             {
-                Debug.Log("Duplicate found at index " + i);
+                //Debug.Log("Duplicate found at index " + i);
                 ResolveDuplicate(FinalValues[i]);
                 return false;
             };
@@ -285,9 +290,9 @@ public class PolymoduleScript : MonoBehaviour {
         for (int i = 0; i < InitialValues.Length; i++)
         {
 
-            Debug.Log("Initial value " + i + " is " + InitialValues[i]);
+            //Debug.Log("Initial value " + i + " is " + InitialValues[i]);
         }
-        UpdateFinalValues();
+        //UpdateFinalValues();
 
         /*for (int i = 0; i < InitialValues.Length; i++)
         {
@@ -311,7 +316,7 @@ public class PolymoduleScript : MonoBehaviour {
             foreach (int n in FinalValues) {
                 TempString += n+" ";
             }
-            Debug.LogFormat("Changed the array into {0}",TempString);
+            Debug.LogFormat("[Polymodule] Changed the array into {0}",TempString);
         }
     }
 
@@ -328,8 +333,8 @@ public class PolymoduleScript : MonoBehaviour {
         foreach (int n in FinalValues) {
             TempString += n + " ";
         }
-        Debug.Log("The last digit of the timer is "+ Math.Floor(Bomb.GetTime()%10));
-        Debug.Log("The current minute is " + Mathf.FloorToInt(Bomb.GetTime() / 60f));
+        //Debug.Log("The last digit of the timer is "+ Math.Floor(Bomb.GetTime()%10));
+        //Debug.Log("The current minute is " + Mathf.FloorToInt(Bomb.GetTime() / 60f));
         Debug.LogFormat("[Polymodule] Striked, expected values were {0}",TempString);
         GetComponent<KMBombModule>().HandleStrike();
     }
@@ -358,4 +363,55 @@ public class PolymoduleScript : MonoBehaviour {
 
         return factors;
     }
+#pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"Use{0} Chain commands via spaces.";
+#pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string Command) {
+        Command = Command.Trim();
+        yield return null;
+        string[] Commands = Command.Split(' ');
+        for (int i = 0; i < Commands.Length; i++) {
+
+            if (Commands[i].Length != 1 || !char.IsDigit(Commands[i][0])) {
+                yield return "sendtochaterror Incorrect syntax.";
+                yield break;
+            }
+
+        }
+
+        
+        for (int i = 0; i < Commands.Length; i++)
+        {
+            if (Array.IndexOf(InitialValues,Int32.Parse(Commands[i][0].ToString()))==-1)
+            {
+                yield return "sendtochaterror Value not found.";
+                yield break;
+            }
+
+        }
+
+
+        for (int i = 0; i < Commands.Length; i++) {
+            Buttons[Array.IndexOf(InitialValues, Int32.Parse(Commands[i][0].ToString()))].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+    }
+
+    IEnumerator TwitchHandleForcedSolve() {
+        if (INPUTMETHOD != 1)
+        {
+            Buttons[Array.IndexOf(FinalValues, FinalValues.Max())].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+        else {
+            int[] TempArray = (int[])FinalValues.Clone();
+            Array.Sort(TempArray);
+            foreach (int n in TempArray) {
+                Buttons[Array.IndexOf(FinalValues,n)].OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
+
 }
