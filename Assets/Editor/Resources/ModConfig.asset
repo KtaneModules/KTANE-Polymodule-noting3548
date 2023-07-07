@@ -22,6 +22,6 @@ MonoBehaviour:
 
     If there are any bugs, contact noting3548 on discord. (Note that this is not the
     main steam account.)'
-  version: 1
+  version: 1.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: f2f79aed0829dde4eb9f8ec579275b61, type: 3}

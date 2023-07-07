@@ -40,11 +40,11 @@ public class PolymoduleScript : MonoBehaviour {
         return (a * x + c) % m;
     }
 
-  
 
-    void Awake () {
+
+    void Awake() {
         RULENUMBER = 15 + (DAY % 3) - (DATE % 3);
-       
+
         INPUTMETHOD = (YEAR + DATE + DAY + MONTH) % 3;
         ModuleId = ModuleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += Activate;
@@ -52,22 +52,55 @@ public class PolymoduleScript : MonoBehaviour {
         var Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
         ulong a = 1664525, c = 1013904223, m = (ulong)Math.Pow(2, 32);
 
-        for(int i = 0; i < RULES.Length; i++)
-        {
-            Seed = LCG(a, c, m, Seed);
-            RULES[i] = (int)(Seed % 16);
-        }
-        //Make sure the first rules aren't redundant
-        if (RULES[0] == 5||RULES[0]==6) { RULES[0] = 8;}
-        //Make sure rule 5 doesn't appear twice in a row
-        bool WasLastValue5 = false;
 
-        for (int i = 0; i < RULES.Length; i++) {
-            if (WasLastValue5 && RULES[i] == 5) { RULES[i] = 6;WasLastValue5 = false;continue; }
+        //new design
+        if (DATE >= 9 || MONTH > 7 || YEAR > 2023) {
 
-            if (RULES[i] == 5) { WasLastValue5 = true; }
-            else { WasLastValue5 = false; }
+            Seed = (ulong)((DATE * 10000) + ((MONTH + DAY) * 100) + YEAR);
+            for (int i = 0; i < RULES.Length; i++)
+            {
+                Seed = LCG(a, c, m, Seed);
+                RULES[i] = (int)((Seed / (double)m) * 16);
+            }
+
+            if (RULES[0] == 5 || RULES[0] == 6) { RULES[0] = 8; }
+
+            int LastValue = -1;
+
+            for (int i = 0; i < RULES.Length; i++)
+            {
+                if (LastValue == RULES[i]) { RULES[i] += 1; }
+                if (RULES[i] == 16) { RULES[i] = 1; }
+                LastValue = RULES[i];
+            }
         }
+
+        //old design
+        else {
+            Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
+            for (int i = 0; i < RULES.Length; i++)
+            {
+                Seed = LCG(a, c, m, Seed);
+                RULES[i] = (int)(Seed%16);
+            }
+
+            if (RULES[0] == 5 || RULES[0] == 6) { RULES[0] = 8; }
+
+
+
+            bool WasLastValue5 = false;
+
+            for (int i = 0; i < RULES.Length; i++)
+            {
+                if (WasLastValue5 && RULES[i] == 5) { RULES[i] = 6; WasLastValue5 = false; continue; }
+                if (RULES[i] == 5) { WasLastValue5 = true; }
+                else { WasLastValue5 = false; }
+
+            }
+        }
+        
+
+
 
         foreach (KMSelectable Button in Buttons)
         {
@@ -267,7 +300,7 @@ public class PolymoduleScript : MonoBehaviour {
         }
 
 
-        //Debug.Log("Rules are" + TempString);
+        Debug.Log("Rules are" + TempString);
         //Debug.Log("Day is " + DAY);
         //Debug.Log("Date is " + DATE);
         //Debug.Log("Month is " + MONTH);
@@ -364,13 +397,25 @@ public class PolymoduleScript : MonoBehaviour {
         return factors;
     }
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use{0} Chain commands via spaces.";
+    private readonly string TwitchHelpMessage = @"Type in the initial value to submit. Chain commands via spaces. To wait until the last digit of the timer is a specific value, use !{0} time [last second value] [initial value index]";
 #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string Command) {
         Command = Command.Trim();
         yield return null;
         string[] Commands = Command.Split(' ');
+
+        if (Commands[0].Equals("time", StringComparison.OrdinalIgnoreCase) && Commands.Length == 3)
+        {
+            if (char.IsDigit(Commands[1][0])&& char.IsDigit(Commands[2][0]))
+            {
+                yield return new WaitUntil(() => Math.Floor(Bomb.GetTime() % 10) == Int32.Parse(Commands[1][0].ToString()));
+                Buttons[Array.IndexOf(InitialValues, Int32.Parse(Commands[2][0].ToString()))].OnInteract();
+                yield break;
+            }
+        }
+
         for (int i = 0; i < Commands.Length; i++) {
+            
 
             if (Commands[i].Length != 1 || !char.IsDigit(Commands[i][0])) {
                 yield return "sendtochaterror Incorrect syntax.";
@@ -399,16 +444,24 @@ public class PolymoduleScript : MonoBehaviour {
     }
 
     IEnumerator TwitchHandleForcedSolve() {
-        if (INPUTMETHOD != 1)
+        if (INPUTMETHOD == 0)
         {
             Buttons[Array.IndexOf(FinalValues, FinalValues.Max())].OnInteract();
             yield return new WaitForSeconds(0.1f);
         }
-        else {
+        else if (INPUTMETHOD == 2) {
+            yield return new WaitUntil(()=>Math.Floor(Bomb.GetTime() % 10)==FinalValues.Max()%10);
+            Buttons[Array.IndexOf(FinalValues, FinalValues.Max())].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        else
+        {
             int[] TempArray = (int[])FinalValues.Clone();
             Array.Sort(TempArray);
-            foreach (int n in TempArray) {
-                Buttons[Array.IndexOf(FinalValues,n)].OnInteract();
+            foreach (int n in TempArray)
+            {
+                Buttons[Array.IndexOf(FinalValues, n)].OnInteract();
                 yield return new WaitForSeconds(0.1f);
             }
         }
