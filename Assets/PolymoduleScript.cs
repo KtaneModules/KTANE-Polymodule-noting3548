@@ -43,10 +43,12 @@ public class PolymoduleScript : MonoBehaviour {
 
 
     void Awake() {
+        ModuleId = ModuleIdCounter++;
+
         RULENUMBER = 15 + (DAY % 3) - (DATE % 3);
 
         INPUTMETHOD = (YEAR + DATE + DAY + MONTH) % 3;
-        ModuleId = ModuleIdCounter++;
+        
         GetComponent<KMBombModule>().OnActivate += Activate;
         //Rule generation
         var Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
@@ -113,7 +115,7 @@ public class PolymoduleScript : MonoBehaviour {
         Button.AddInteractionPunch(1);
         
         if (InputNumber==0){
-            Debug.LogFormat("[Polymodule] Pressed button at minute {0}", Mathf.FloorToInt(Bomb.GetTime() / 60f));
+            Debug.LogFormat("[Polymodule #{1}] Pressed button at minute {0}", Mathf.FloorToInt(Bomb.GetTime() / 60f),ModuleId);
             UpdateFinalValues();}
         InputArray = (int[])FinalValues.Clone();
         Array.Sort(InputArray);
@@ -320,6 +322,17 @@ public class PolymoduleScript : MonoBehaviour {
             FinalValues[i] = x;
         }
 
+        string TempDebugString = "";
+
+        
+        foreach (int i in InitialValues) {
+            TempDebugString += i + " ";
+        }
+
+        TempDebugString.Remove(TempDebugString.Length - 1);
+
+        Debug.LogFormat("[Polymodule #{0}] Initial values are (in reading order) {1}", ModuleId,TempDebugString);
+
         for (int i = 0; i < InitialValues.Length; i++)
         {
 
@@ -349,13 +362,13 @@ public class PolymoduleScript : MonoBehaviour {
             foreach (int n in FinalValues) {
                 TempString += n+" ";
             }
-            Debug.LogFormat("[Polymodule] Changed the array into {0}",TempString);
+            //Debug.LogFormat("[Polymodule #{1}] Changed the array into {0}",TempString,ModuleId);
         }
     }
 
     void Solve()
     {
-        Debug.LogFormat("[Polymodule] Module solved");
+        Debug.LogFormat("[Polymodule #{0}] Module solved",ModuleId);
         GetComponent<KMBombModule>().HandlePass();
     }
 
@@ -368,7 +381,7 @@ public class PolymoduleScript : MonoBehaviour {
         }
         //Debug.Log("The last digit of the timer is "+ Math.Floor(Bomb.GetTime()%10));
         //Debug.Log("The current minute is " + Mathf.FloorToInt(Bomb.GetTime() / 60f));
-        Debug.LogFormat("[Polymodule] Striked, expected values were {0}",TempString);
+        Debug.LogFormat("[Polymodule #{1}] Striked, expected final values were (in reading order) {0}",TempString,ModuleId);
         GetComponent<KMBombModule>().HandleStrike();
     }
 
