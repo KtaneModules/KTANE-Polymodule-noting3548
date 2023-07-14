@@ -76,7 +76,7 @@ public class PolymoduleScript : MonoBehaviour {
                 LastValue = RULES[i];
             }
         }
-
+        //Test
         //old design
         else {
             Seed = (ulong)(YEAR * 10000 + MONTH * 100 + DAY);
