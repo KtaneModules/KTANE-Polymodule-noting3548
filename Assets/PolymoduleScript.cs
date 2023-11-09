@@ -457,6 +457,7 @@ public class PolymoduleScript : MonoBehaviour {
     }
 
     IEnumerator TwitchHandleForcedSolve() {
+        UpdateFinalValues();
         if (INPUTMETHOD == 0)
         {
             Buttons[Array.IndexOf(FinalValues, FinalValues.Max())].OnInteract();
